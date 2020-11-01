@@ -12,6 +12,7 @@
       :disabled="disabled"
       :buttonText="buttonText"
       :error="errors.phone"
+      @button-click="getVerifyCode"
     />
 
     <base-input
@@ -28,13 +29,14 @@
     </div>
 
     <div class="login-button mt-20">
-      <button>登录</button>
+      <button @click="getVerifyCode">登录</button>
     </div>
   </div>
 </template>
 
 <script>
 import BaseInput from '../components/BaseInput'
+import { isMobilePhone } from 'utils/reg.js'
 export default {
   data() {
     return {
@@ -50,6 +52,46 @@ export default {
   },
   components: {
     BaseInput,
+  },
+  methods: {
+    getVerifyCode() {
+      if (this.validatePhone()) {
+        // 发送网络请求
+        this.validateButton()
+      }
+    },
+    validatePhone() {
+      // 验证手机号码
+      if (!this.phone) {
+        this.errors = {
+          phone: '手机号码不能为空',
+        }
+        return false
+      } else if (!isMobilePhone(this.phone)) {
+        this.errors = {
+          phone: '请填写正确的手机号码',
+        }
+        return false
+      } else {
+        this.errors = {}
+        return true
+      }
+    },
+    validateButton() {
+      let time = 60
+      let timer = setInterval(() => {
+        if (time === 0) {
+          clearInterval(timer)
+          this.buttonText = '获取验证码'
+          this.disabled = false
+        } else {
+          // 倒计时
+          this.buttonText = time + '秒后重试'
+          this.disabled = true
+          time -= 1
+        }
+      }, 1000)
+    },
   },
 }
 </script>

@@ -57,6 +57,9 @@ export default {
     padding: 10px;
     display: flex;
     justify-content: space-between;
+    &.is-invalid {
+      border: 1px solid red;
+    }
     > input {
       height: 100%;
       width: 60%;
@@ -70,13 +73,10 @@ export default {
         color: #aaa;
       }
     }
-    &.is-invalid {
-      border: 1px solid red;
-    }
-    > .invalid-feedback {
-      color: red;
-      padding-top: 5px;
-    }
+  }
+  > .invalid-feedback {
+    color: red;
+    padding-top: 5px;
   }
 }
 </style>
